@@ -13,32 +13,16 @@ If you're having problems with the plugin, open an issue on github.
 Installation
 ------------
 
+Install SiriProxy. Some instructions for doing this on a RaspberryPi can be found here: http://www.hometoys.com/emagazine/2013/02/siri-home-automation-integration-from-start-to-finish-brpart-2--raspberry-pi-installation/2090
+
 Install the LightwaveRF Gem (http://rubydoc.info/gems/lightwaverf/) and make sure a copy of the LightwaveRF Gem Config file (`lightwaverf-config.yml`) exists in the Home directory of the account which is being used to run SiriProxy, e.g.
 	
-	gem install lightwaverf
-
-Copy this plugin into the following location, e.g:
-
-`~/.rvm/gems/ruby-1.9.3-p385@SiriProxy/gems/siriproxy-0.3.2/plugins/`
-
-Edit the Plugin class file (`lib/siriproxy-lwrf.rb`) so that *your* LightwaveRF rooms are listened for. For help building the regular expressions, try http://rubular.com/r/vezhtA3hA0 e.g.
-
-	cd ~/.rvm/gems/ruby-1.9.3-p385@SiriProxy/gems/siriproxy-0.3.2/plugins/siriproxy-lwrf
-	nano lib/siriproxy-lwrf.rb
-	
-	# e.g.
-	#  listen_for (/turn (on|off) the (.*) in the ((?-mix:lounge|hallway|bedroom))/i) { |action, deviceName, roomName| send_lwrf_command(roomName,deviceName,action) }
-	# becomes:
-	#  listen_for (/turn (on|off) the (.*) in the ((?-mix:kitchen|bathroom|porch|study))/i) { |action, deviceName, roomName| send_lwrf_command(roomName,deviceName,action) }
-	
-Copy the plugin, e.g.
-
-	cp -r ~/.rvm/gems/ruby-1.9.3-p385@SiriProxy/gems/siriproxy-0.3.2/plugins/siriproxy-lwrf ~/SiriProxy/plugins/siriproxy-lwrf
+	rvmsudo gem install lightwaverf
 
 Edit the SiriProxy config file (`~/.siriproxy/config.yml`) so that it contains the following lines, e.g.
 
     - name: 'Lwrf'
-      path: './plugins/siriproxy-lwrf'
+      git: 'git://github.com/ianperrin/siriproxy-lwrf.git'
 
 Then rebundle SiriProxy, e.g.
 
@@ -59,11 +43,20 @@ Say things like:
 * Dim the 'light' in the 'lounge' to '50'
 * Dim the 'lounge' 'light' to '75' percent
 * Set the 'lounge' 'light' to '75'
+* Set the level on the 'lounge' 'light' to '75'
+
+Version History
+-----
+* 0.0.3 - Initial Release
+* 0.0.5 - Added a wider range of _natural language_ commands, rooms and device validation against the config file and support for dimming
+* 0.0.6 - Removed the need to edit the plugin by dynamically creating Siri commands based on the rooms in the LightWaveRF gem configuration file
 
 To Do
 -----
-* Eliminate the need for modifications to the SiriProxy class file by reading the LightwaveRF Gem config file directly
-* Support other methods from the LightwaveRF Gem 
+* Support other methods from the LightwaveRF Gem including sequences, energy and timers
+* Support aliases for room and device names
+* Prompt user for options if room or device names can't be found
+* Support commands to display the power usage logs/graphs
 
 Licensing
 ---------
