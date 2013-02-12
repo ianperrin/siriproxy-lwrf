@@ -26,7 +26,7 @@ Edit the Plugin class file (`lib/siriproxy-lwrf.rb`) so that *your* LightwaveRF 
 	cd ~/.rvm/gems/ruby-1.9.3-p385@SiriProxy/gems/siriproxy-0.3.2/plugins/siriproxy-lwrf
 	nano lib/siriproxy-lwrf.rb
 	
-  # e.g.
+	# e.g.
 	#  listen_for /turn (on|off) the (.*) in the ((?-mix:lounge|hallway|bedroom))/i do |action, deviceName, roomName| { send_lwrf_command (roomName, deviceName, action) }
 	# becomes:
 	#  listen_for /turn (on|off) the (.*) in the ((?-mix:kitchen|bathroom|porch|study))/i do |action, deviceName, roomName| { send_lwrf_command (roomName, deviceName, action) }	
