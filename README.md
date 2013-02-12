@@ -27,9 +27,9 @@ Edit the Plugin class file (`lib/siriproxy-lwrf.rb`) so that *your* LightwaveRF 
 	nano lib/siriproxy-lwrf.rb
 	
 	# e.g.
-	#  listen_for /turn (on|off) the (.*) in the ((?-mix:lounge|hallway|bedroom))/i do |action, deviceName, roomName| { send_lwrf_command (roomName, deviceName, action) }
+	#  listen_for (/turn (on|off) the (.*) in the ((?-mix:lounge|hallway|bedroom))/i) { |action, deviceName, roomName| send_lwrf_command(roomName,deviceName,action) }
 	# becomes:
-	#  listen_for /turn (on|off) the (.*) in the ((?-mix:kitchen|bathroom|porch|study))/i do |action, deviceName, roomName| { send_lwrf_command (roomName, deviceName, action) }	
+	#  listen_for (/turn (on|off) the (.*) in the ((?-mix:kitchen|bathroom|porch|study))/i) { |action, deviceName, roomName| send_lwrf_command(roomName,deviceName,action) }
 	
 Copy the plugin, e.g.
 
