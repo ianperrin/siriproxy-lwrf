@@ -7,13 +7,16 @@ require 'lightwaverf'
 # This is a SiriProxy Plugin For LightWaveRF. It simply intercepts the phrases to
 # control LightWaveRF devices and responds with a message about the command that
 # is sent to the LightWaveRF gem.
-#
-# Remember to add other plugins to the "config.yml" file if you create them!
 ######
 
 class SiriProxy::Plugin::Lwrf < SiriProxy::Plugin
+
   def initialize(config)
-    #if you have custom configuration options, process them here!
+    # get custom configuration options
+    
+    # initialise LightWaveRF Gem
+    @lwrf = LightWaveRF.new
+    @lwrfConfig = @lwrf.get_config
   end
 
   #get the user's location and display it in the logs
@@ -28,15 +31,45 @@ class SiriProxy::Plugin::Lwrf < SiriProxy::Plugin
     #    modifications made to it)
   end
 
-  listen_for /Test lightwave/i do
-    say "Lightwave is in my control!"
-    request_completed
+	# Test Commands
+  listen_for /test lightwave/i do
+		say "LightWave is in my control using the following config file: #{@lwrf.get_config_file}", spoken: "LightWave is in my control!"
+		request_completed
   end
+
+	# Commands to turn on the devices
+  listen_for (/turn (on|off) the (.*) in the ((?-mix:lounge|hallway|bedroom))/i) { |action, deviceName, roomName| send_lwrf_command(roomName,deviceName,action) }
+  listen_for (/turn (on|off) the ((?-mix:lounge|hallway|bedroom)) (.*)/i) { |action, roomName, deviceName| send_lwrf_command(roomName,deviceName,action) }
+  listen_for (/turn the (.*) in the ((?-mix:lounge|hallway|bedroom)) (on|off)/i) { |deviceName, roomName, action| send_lwrf_command(roomName,deviceName,action) }
+  listen_for (/turn the ((?-mix:lounge|hallway|bedroom)) (.*) (on|off)/i) { |roomName, deviceName, action| send_lwrf_command(roomName,deviceName,action) }
+
+	# Commands to dim devices
+  listen_for (/(?:(?:dim)|(?:set)) the (.*) in the ((?-mix:lounge|hallway|bedroom)) to ([1-9][0-9]?)(?:%| percent)?/i) { |deviceName, roomName, action| send_lwrf_command(roomName,deviceName,action) }
+  listen_for (/(?:(?:dim)|(?:set)) the ((?-mix:lounge|hallway|bedroom)) (.*) to ([1-9][0-9]?)(?:%| percent)?/i) { |roomName, deviceName, action| send_lwrf_command(roomName,deviceName,action) }
   
-  listen_for /Turn (hallway|lounge|bedroom) (light|lamp) (on|off)/i do |room, device, action|
-    say "The #{room} #{device} is being turned #{action}!"
-    LightWaveRF.new.send "#{room}", "#{device}", "#{action}"
-    request_completed
+  def send_lwrf_command (roomName, deviceName, action)  
+  	if @lwrfConfig.has_key?("room") && @lwrfConfig["room"].has_key?(roomName) && @lwrfConfig["room"][roomName].include?(deviceName)
+			Thread.new {
+				begin
+					say "Turning #{action} the #{deviceName} in the #{roomName}."
+					@lwrf.send "#{roomName}", "#{deviceName}", "#{action}"
+				rescue Exception
+					pp $!
+					say "Sorry, I encountered an error: #{$!}"
+				ensure
+					request_completed
+				end
+			}
+		elsif @lwrfConfig["room"].has_key?(roomName) 
+			say "I'm sorry, I can't find '#{deviceName}' in the '#{roomName}'."
+			request_completed
+		elsif @lwrfConfig.has_key?("room") 
+			say "I'm sorry, I can't find '#{roomName}'."
+			request_completed
+		else		
+			say "I'm sorry, I can't find either '#{roomName}' or '#{deviceName}'!"
+			request_completed
+		end
   end
 
 end

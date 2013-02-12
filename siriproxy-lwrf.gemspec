@@ -1,9 +1,10 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
+require "lwrf/lwrf-version"
 
 Gem::Specification.new do |s|
   s.name        = "siriproxy-lwrf"
-  s.version     = "0.0.4" 
+  s.version     = Lwrf::VERSION 
   s.authors     = ["ian"]
   s.email       = [""]
   s.homepage    = ""
