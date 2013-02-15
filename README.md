@@ -1,4 +1,4 @@
-SiriProxy-LWRF
+SiriProxy LightWaveRF Controller
 ================================
 About
 -----
@@ -15,21 +15,34 @@ Installation
 
 Install SiriProxy. Some instructions for doing this on a RaspberryPi can be found here: http://www.hometoys.com/emagazine/2013/02/siri-home-automation-integration-from-start-to-finish-brpart-2--raspberry-pi-installation/2090
 
-Install the LightwaveRF Gem (http://rubydoc.info/gems/lightwaverf/) and make sure a copy of the LightwaveRF Gem Config file (`lightwaverf-config.yml`) exists in the Home directory of the account which is being used to run SiriProxy, e.g.
-	
-	rvmsudo gem install lightwaverf
-
 Edit the SiriProxy config file (`~/.siriproxy/config.yml`) so that it contains the following lines, e.g.
 
     - name: 'Lwrf'
       git: 'git://github.com/ianperrin/siriproxy-lwrf.git'
 
-Then rebundle SiriProxy, e.g.
+Re-bundle SiriProxy, e.g.
 
 	cd ~/SiriProxy
 	rvmsudo siriproxy bundle
 	rvmsudo bundle install
 	rvmsudo siriproxy server
+
+Test the plugin by saying the following command:
+
+	"Test Lightwave"
+
+Siri should respond by saying something like:
+
+	"LightWave is in my control!"
+
+Siri should also display the path of the [LightWaveRF Gem](http://rubydoc.info/gems/lightwaverf/)) config file, e.g.
+
+	"LightWave is in my control using the config file ~/root/lightwaverf-config.yml"
+
+Use this path to edit the config file so that it refers to the rooms and devices in your LightWaveRF setup, e.g.
+
+	sudo nano ~/root/lightwaverf-config.yml
+
 
 Usage
 -----
