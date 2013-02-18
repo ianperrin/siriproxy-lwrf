@@ -21,6 +21,7 @@ Edit the SiriProxy config file (`~/.siriproxy/config.yml`) so that it contains t
       git: 'git://github.com/ianperrin/siriproxy-lwrf.git'
 
 To view debug information, add set the debug option to true in the SiriProxy config file (`~/.siriproxy/config.yml`), e.g.
+
     - name: 'Lwrf'
       git: 'git://github.com/ianperrin/siriproxy-lwrf.git'
       debug: true 
@@ -68,6 +69,7 @@ Version History
 * 0.0.3 - Initial Release
 * 0.0.5 - Added a wider range of _natural language_ commands, rooms and device validation against the config file and support for dimming
 * 0.0.6 - Removed the need to edit the plugin by dynamically creating Siri commands based on the rooms in the LightWaveRF gem configuration file
+* 0.0.7 - Added debug option to print messages to log. Set `debug: true` in the config file as per installation notes
 
 To Do
 -----
