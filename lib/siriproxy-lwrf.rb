@@ -14,7 +14,11 @@ class SiriProxy::Plugin::Lwrf < SiriProxy::Plugin
 
   def initialize(config)
     # get custom configuration options
-    @debug = config["debug"]
+    if (config.has_key?("debug"))
+      @debug = config["debug"] == true
+    else
+      @debug = false
+    end
     @debug and (puts "[Info - Lwrf] initialize: Configuration Options: debug => #{@debug}" )
   end
 
@@ -32,34 +36,36 @@ class SiriProxy::Plugin::Lwrf < SiriProxy::Plugin
 
   # Test Commands
   listen_for /test lightwave/i do
-    say "LightWave is in my control using the following config file: #{LightWaveRF.new.get_config_file}", spoken: "LightWave is in my control!"
+    say "LightWave is in my control using the following config file: #{LightWaveRF.new.get_config_file rescue nil}", spoken: "LightWave is in my control!"
     request_completed
   end
 
   # Commands to turn on/off a device in a room
-  listen_for (/turn (on|off) the (.*) in the (#{Regexp.union(LightWaveRF.new.get_config["room"].keys.map(&:to_s))})/i) { |action, deviceName, roomName| send_lwrf_command(roomName,deviceName,action) }
-  listen_for (/turn (on|off) the (#{Regexp.union(LightWaveRF.new.get_config["room"].keys.map(&:to_s))}) (.*)/i) { |action, roomName, deviceName| send_lwrf_command(roomName,deviceName,action) }
-  listen_for (/turn the (.*) in the (#{Regexp.union(LightWaveRF.new.get_config["room"].keys.map(&:to_s))}) (on|off)/i) { |deviceName, roomName, action| send_lwrf_command(roomName,deviceName,action) }
-  listen_for (/turn the (#{Regexp.union(LightWaveRF.new.get_config["room"].keys.map(&:to_s))}) (.*) (on|off)/i) { |roomName, deviceName, action| send_lwrf_command(roomName,deviceName,action) }
+  roomNamesRegEx = Regexp.union(LightWaveRF.new.get_config["room"].keys.map(&:to_s)) rescue nil
+  
+  listen_for (/turn (on|off) the (.*) in the (#{roomNamesRegEx})/i) { |action, deviceName, roomName| send_lwrf_command(roomName,deviceName,action) }
+  listen_for (/turn (on|off) the (#{roomNamesRegEx}) (.*)/i)        { |action, roomName, deviceName| send_lwrf_command(roomName,deviceName,action) }
+  listen_for (/turn the (.*) in the (#{roomNamesRegEx}) (on|off)/i) { |deviceName, roomName, action| send_lwrf_command(roomName,deviceName,action) }
+  listen_for (/turn the (#{roomNamesRegEx}) (.*) (on|off)/i)        { |roomName, deviceName, action| send_lwrf_command(roomName,deviceName,action) }
 
   # Commands to dim a devices in a room
-  listen_for (/(?:(?:dim)|(?:set)|(?:turn up)|(?:turn down)|(?:set level on)|(?:set the level on)) the (.*) in the (#{Regexp.union(LightWaveRF.new.get_config["room"].keys.map(&:to_s))}) to ([1-9][0-9]?)(?:%| percent)?/i) { |deviceName, roomName, action| send_lwrf_command(roomName,deviceName,action) }
-  listen_for (/(?:(?:dim)|(?:set)|(?:turn up)|(?:turn down)|(?:set level on)|(?:set the level on)) the (#{Regexp.union(LightWaveRF.new.get_config["room"].keys.map(&:to_s))}) (.*) to ([1-9][0-9]?)(?:%| percent)?/i) { |roomName, deviceName, action| send_lwrf_command(roomName,deviceName,action) }
+  listen_for (/(?:(?:dim)|(?:set)|(?:turn up)|(?:turn down)|(?:set level on)|(?:set the level on)) the (.*) in the (#{roomNamesRegEx}) to ([1-9][0-9]?)(?:%| percent)?/i) { |deviceName, roomName, action| send_lwrf_command(roomName,deviceName,action) }
+  listen_for (/(?:(?:dim)|(?:set)|(?:turn up)|(?:turn down)|(?:set level on)|(?:set the level on)) the (#{roomNamesRegEx}) (.*) to ([1-9][0-9]?)(?:%| percent)?/i)        { |roomName, deviceName, action| send_lwrf_command(roomName,deviceName,action) }
 
   def send_lwrf_command (roomName, deviceName, action)  
     @debug and (puts "[Info - Lwrf] send_lwrf_command: Starting with arguments: roomName => #{roomName}, deviceName => #{deviceName}, roomName => #{roomName} ")
       begin
         # initialise LightWaveRF Gem
         @debug and (puts "[Info - Lwrf] send_lwrf_command: Instantiating LightWaveRF Gem")
-        lwrf = LightWaveRF.new
+        lwrf = LightWaveRF.new rescue nil
         @debug and (puts "[Info - Lwrf] send_lwrf_command: lwrf => #{lwrf}" )
-        lwrfConfig = lwrf.get_config
+        lwrfConfig = lwrf.get_config rescue nil
         @debug and (puts "[Info - Lwrf] send_lwrf_command: lwrfConfig => #{lwrfConfig}" )
 
         # Validate Inputs
         if lwrfConfig.has_key?("room") && lwrfConfig["room"].has_key?(roomName) && lwrfConfig["room"][roomName].include?(deviceName)
           say "Turning #{action} the #{deviceName} in the #{roomName}."
-          lwrf.send "#{roomName}", "#{deviceName}", "#{action}", @debug
+          lwrf.send "#{roomName}", "#{deviceName}", "#{action}", @debug rescue nil
           @debug and (puts "[Info - Lwrf] send_lwrf_command: Command sent to LightWaveRF Gem" )
 
         elsif lwrfConfig["room"].has_key?(roomName) 
