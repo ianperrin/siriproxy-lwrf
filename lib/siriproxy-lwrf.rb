@@ -44,7 +44,7 @@ class SiriProxy::Plugin::Lwrf < SiriProxy::Plugin
   roomNamesRegEx = Regexp.union(LightWaveRF.new.get_config["room"].keys.map(&:to_s)) rescue nil
   
   listen_for (/turn (on|off) the (.*) in the (#{roomNamesRegEx})/i) { |action, deviceName, roomName| send_lwrf_command(roomName,deviceName,action) }
-  listen_for (/turn (on|off) the (#{roomNamesRegEx}) (.*)/i)        { |action, roomName, deviceName| send_lwrf_command(roomName,deviceName,action) }
+  listen_for (/turn (on|off) the (#{roomNamesRegEx}) ([^\s]*)/i)    { |action, roomName, deviceName| send_lwrf_command(roomName,deviceName,action) }
   listen_for (/turn the (.*) in the (#{roomNamesRegEx}) (on|off)/i) { |deviceName, roomName, action| send_lwrf_command(roomName,deviceName,action) }
   listen_for (/turn the (#{roomNamesRegEx}) (.*) (on|off)/i)        { |roomName, deviceName, action| send_lwrf_command(roomName,deviceName,action) }
 
