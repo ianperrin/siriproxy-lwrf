@@ -20,6 +20,11 @@ Edit the SiriProxy config file (`~/.siriproxy/config.yml`) so that it contains t
     - name: 'Lwrf'
       git: 'git://github.com/ianperrin/siriproxy-lwrf.git'
 
+To view debug information, add set the debug option to true in the SiriProxy config file (`~/.siriproxy/config.yml`), e.g.
+    - name: 'Lwrf'
+      git: 'git://github.com/ianperrin/siriproxy-lwrf.git'
+      debug: true 
+
 Re-bundle SiriProxy, e.g.
 
 	cd ~/SiriProxy

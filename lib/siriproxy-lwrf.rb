@@ -11,8 +11,11 @@ require 'lightwaverf'
 
 class SiriProxy::Plugin::Lwrf < SiriProxy::Plugin
 
+
   def initialize(config)
     # get custom configuration options
+    @debug = config["debug"]
+    @debug and (puts "[Info - Lwrf] initialize: Configuration Options: debug => #{@debug}" )
   end
 
   #get the user's location and display it in the logs
@@ -44,16 +47,20 @@ class SiriProxy::Plugin::Lwrf < SiriProxy::Plugin
   listen_for (/(?:(?:dim)|(?:set)|(?:turn up)|(?:turn down)|(?:set level on)|(?:set the level on)) the (#{Regexp.union(LightWaveRF.new.get_config["room"].keys.map(&:to_s))}) (.*) to ([1-9][0-9]?)(?:%| percent)?/i) { |roomName, deviceName, action| send_lwrf_command(roomName,deviceName,action) }
 
   def send_lwrf_command (roomName, deviceName, action)  
-    Thread.new {
+    @debug and (puts "[Info - Lwrf] send_lwrf_command: Starting with arguments: roomName => #{roomName}, deviceName => #{deviceName}, roomName => #{roomName} ")
       begin
         # initialise LightWaveRF Gem
+        @debug and (puts "[Info - Lwrf] send_lwrf_command: Instantiating LightWaveRF Gem")
         lwrf = LightWaveRF.new
+        @debug and (puts "[Info - Lwrf] send_lwrf_command: lwrf => #{lwrf}" )
         lwrfConfig = lwrf.get_config
+        @debug and (puts "[Info - Lwrf] send_lwrf_command: lwrfConfig => #{lwrfConfig}" )
 
         # Validate Inputs
         if lwrfConfig.has_key?("room") && lwrfConfig["room"].has_key?(roomName) && lwrfConfig["room"][roomName].include?(deviceName)
           say "Turning #{action} the #{deviceName} in the #{roomName}."
-          lwrf.send "#{roomName}", "#{deviceName}", "#{action}"
+          lwrf.send "#{roomName}", "#{deviceName}", "#{action}", @debug
+          @debug and (puts "[Info - Lwrf] send_lwrf_command: Command sent to LightWaveRF Gem" )
 
         elsif lwrfConfig["room"].has_key?(roomName) 
           say "I'm sorry, I can't find '#{deviceName}' in the '#{roomName}'."
@@ -67,11 +74,15 @@ class SiriProxy::Plugin::Lwrf < SiriProxy::Plugin
 
       rescue Exception
         pp $!
-        say "Sorry, I encountered an error: #{$!}"
+        say "Sorry, I encountered an error"
+        @debug and (puts "[Info - Lwrf] send_lwrf_command: Error => #{$!}" )
       ensure
         request_completed
+        @debug and (puts "[Info - Lwrf] send_lwrf_command: Request Completed" )
       end
-      }
+
+    @debug and (puts "[Info - Lwrf] send_lwrf_command: Ending" )
+
   end
 
 end
