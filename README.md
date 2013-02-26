@@ -2,9 +2,9 @@ SiriProxy LightWaveRF Controller
 ================================
 About
 -----
-A Plugin for SiriProxy to send commands to LightwaveRF devices via a LightwaveRF Wifi Link.
+A Plugin for [Siri Proxy](https://github.com/plamoni/SiriProxy) to send commands to LightwaveRF devices via a LightwaveRF Wifi Link.
 
-This plugin requires LightwaveRF hardware from http://www.lightwaverf.com/ and the LightwaveRF Gem (http://rubydoc.info/gems/lightwaverf/).
+This plugin requires LightwaveRF hardware from http://www.lightwaverf.com/ and the LightwaveRF Gem (https://rubygems.org/gems/lightwaverf/).
 
 Important Note, this plugin is neither developed, nor endorsed by lightwaverf.com, do not contact them about problems or issues you encounter with this plugin. 
 
@@ -41,7 +41,7 @@ Siri should respond by saying something like:
 
 	"LightWave is in my control!"
 
-Siri should also display the path of the [LightWaveRF Gem](http://rubydoc.info/gems/lightwaverf/)) config file, e.g.
+Siri should also display the path of the [LightWaveRF Gem](https://rubygems.org/gems/lightwaverf/) config file, e.g.
 
 	"LightWave is in my control using the config file ~/root/lightwaverf-config.yml"
 
