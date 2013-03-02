@@ -25,7 +25,7 @@ To support the ability to update rooms and devices from the LightwaveRF servers,
     - name: 'Lwrf'
       git: 'git://github.com/ianperrin/siriproxy-lwrf.git'
       lwrfemail: 'email@example.com'
-      lwrfpin: 1234
+      lwrfpin: '1234'
 
 To view debug information, set the debug option to true in the SiriProxy config file (`~/.siriproxy/config.yml`), e.g.
 
@@ -56,7 +56,7 @@ Use this path to edit the config file so that it contains the correct host, room
 
 	sudo nano ~/root/lightwaverf-config.yml
 
-If you have uploaded your LightwaveRF database to the server and set the `lwrfemail` and `lwrfpin` options in the config file, your rooms and devices configuration can be automatically updated by saying the following command:
+If you have uploaded your LightwaveRF database to the server and set the `lwrfemail` and `lwrfpin` options in the SiriProxy config file, your rooms and devices configuration can be automatically updated by saying the following command:
 
 	"Update my Lightwave data"
 
