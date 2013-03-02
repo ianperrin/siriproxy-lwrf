@@ -1,4 +1,4 @@
-SiriProxy LightWaveRF Controller
+SiriProxy LightwaveRF Controller
 ================================
 About
 -----
@@ -20,7 +20,14 @@ Edit the SiriProxy config file (`~/.siriproxy/config.yml`) so that it contains t
     - name: 'Lwrf'
       git: 'git://github.com/ianperrin/siriproxy-lwrf.git'
 
-To view debug information, add set the debug option to true in the SiriProxy config file (`~/.siriproxy/config.yml`), e.g.
+To support the ability to update rooms and devices from the LightwaveRF servers, add the `lwrfemail` and `lwrfpin` options to the SiriProxy config file (`~/.siriproxy/config.yml`), e.g.
+
+    - name: 'Lwrf'
+      git: 'git://github.com/ianperrin/siriproxy-lwrf.git'
+      lwrfemail: 'email@example.com'
+      lwrfpin: 1234
+
+To view debug information, set the debug option to true in the SiriProxy config file (`~/.siriproxy/config.yml`), e.g.
 
     - name: 'Lwrf'
       git: 'git://github.com/ianperrin/siriproxy-lwrf.git'
@@ -41,35 +48,49 @@ Siri should respond by saying something like:
 
 	"LightWave is in my control!"
 
-Siri should also display the path of the [LightWaveRF Gem](https://rubygems.org/gems/lightwaverf/) config file, e.g.
+Siri should also display the path of the [LightwaveRF Gem](https://rubygems.org/gems/lightwaverf/) config file, e.g.
 
 	"LightWave is in my control using the config file ~/root/lightwaverf-config.yml"
 
-Use this path to edit the config file so that it refers to the rooms and devices in your LightWaveRF setup, e.g.
+Use this path to edit the config file so that it contains the correct host, rooms and devices for your LightwaveRF setup, e.g.
 
 	sudo nano ~/root/lightwaverf-config.yml
 
+If you have uploaded your LightwaveRF database to the server and set the `lwrfemail` and `lwrfpin` options in the config file, your rooms and devices configuration can be automatically updated by saying the following command:
+
+	"Update my Lightwave data"
 
 Usage
 -----
-Say things like:
+Turn devices on/off by saying things like:
 
 * Turn 'on' the 'light' in the 'lounge'
 * Turn 'on' the 'lounge' 'light'
 * Turn the 'light' in the 'lounge' 'off'
 * Turn the 'lounge' 'light' 'on'
+
+Dim devices by saying things like:
+
 * Dim the 'light' in the 'lounge' to '50' percent
 * Dim the 'light' in the 'lounge' to '50'
 * Dim the 'lounge' 'light' to '75' percent
 * Set the 'lounge' 'light' to '75'
 * Set the level on the 'lounge' 'light' to '75'
 
+Update LightwaveRF Gem config file with data from the LightwaveRF servers
+
+* Update LightWave config
+* Update my LightWave configuration
+* Download my LightWave device list
+* Download LightWave data
+
 Version History
 -----
 * 0.0.3 - Initial Release
 * 0.0.5 - Added a wider range of _natural language_ commands, rooms and device validation against the config file and support for dimming
-* 0.0.6 - Removed the need to edit the plugin by dynamically creating Siri commands based on the rooms in the LightWaveRF gem configuration file
+* 0.0.6 - Removed the need to edit the plugin by dynamically creating Siri commands based on the rooms in the LightwaveRF gem configuration file
 * 0.0.7 - Added debug option to print messages to log. Set `debug: true` in the config file as per installation notes
+* 0.0.8 - Updated to support LightwaveRF Gem 0.3.0 and added the ability to update room and device information from the LightwaveRF servers
 
 To Do
 -----
