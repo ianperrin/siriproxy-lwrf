@@ -4,11 +4,16 @@ About
 -----
 A Plugin for [Siri Proxy](https://github.com/plamoni/SiriProxy) to send commands to LightwaveRF devices via a LightwaveRF Wifi Link.
 
-This plugin requires LightwaveRF hardware from http://www.lightwaverf.com/ and the LightwaveRF Gem (https://rubygems.org/gems/lightwaverf/).
+Prerequisites
+------------
+* A [Siri capable device](http://www.apple.com/ios/siri/siri-faq/) – currently that includes the iPhone 4S or newer, the iPad 4th generation or the iPad Mini
+* A [Siri Proxy](https://github.com/plamoni/SiriProxy) server
+* The [LightwaveRF Gem](https://rubygems.org/gems/lightwaverf/) - this is installed automatically when installing this plugin.
+* One of more [LightwaveRF devices](http://www.lightwaverf.com/product-range) and a [LightwaveRF WiFi Link](http://amzn.to/YPnRjZ)!
 
-Important Note, this plugin is neither developed, nor endorsed by lightwaverf.com, do not contact them about problems or issues you encounter with this plugin. 
-
-If you're having problems with the plugin, open an issue on github.
+#### Important Notes 
+* This plugin **does not** require a Jailbreak and any settings made can be fully reversed/uninstalled if required.
+* This plugin is neither developed, nor endorsed by lightwaverf.com, do not contact them about problems or issues you encounter with this plugin. If you're having problems with the plugin, open an issue on github.
 
 Installation
 ------------
